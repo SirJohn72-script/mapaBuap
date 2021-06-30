@@ -52,7 +52,7 @@ const Template = () => {
       window.removeEventListener("resize", resize);
       currentRef.removeChild(renderer.domElement);
     };
-  });
+  }, []);
 
   return (
     <div
