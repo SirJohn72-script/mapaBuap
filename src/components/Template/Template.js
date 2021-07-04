@@ -27,8 +27,8 @@ const Template = () => {
 
     //Resize canvas
     const resize = () => {
-      renderer.setSize(currentRef.clientWidth, currentRef.clientHeihgt);
-      camera.aspect = currentRef.clientWidth / currentRef.clientHeihgt;
+      renderer.setSize(currentRef.clientWidth, currentRef.clientHeight);
+      camera.aspect = currentRef.clientWidth / currentRef.clientHeight;
       camera.updateProjectionMatrix();
     };
     window.addEventListener("resize", resize);
