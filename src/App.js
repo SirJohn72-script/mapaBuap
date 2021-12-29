@@ -1,9 +1,12 @@
+import Mapa3 from "./components/Mapa3/Mapa3"
+
 function App() {
+
   return (
     <>
-      <h1>Hola mundo</h1>
+      <Mapa3 />
     </>
-  );
+  )
 }
 
-export default App;
+export default App
