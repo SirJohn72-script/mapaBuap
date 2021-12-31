@@ -18,6 +18,7 @@ let loadingBar = null
 const gui = new dat.GUI({ width: 400 })
 gui.closed = true
 
+
 //timeline
 const timeline = gsap.timeline({
   defaults: { duration: 3, ease: Power2.easeInOut },
@@ -33,27 +34,34 @@ const camera = new THREE.PerspectiveCamera(
   250
 )
 scene.add(camera)
-// camera.position.set(1.9, 1.77, 11.01)
 camera.position.set(-5.50889, 114.12489, 13.3497)
 
 gui
   .add(camera.position, "x")
-  .min(-10)
-  .max(20)
+  .min(-40)
+  .max(50)
   .step(0.00001)
   .name("Camera x")
 gui
   .add(camera.position, "y")
-  .min(-10)
-  .max(200)
+  .min(0)
+  .max(50)
   .step(0.00001)
   .name("Camera y")
 gui
   .add(camera.position, "z")
-  .min(-10)
-  .max(20)
+  .min(-40)
+  .max(50)
   .step(0.00001)
   .name("Camera z")
+
+gui.add(camera, 'zoom')
+  .min(1)
+  .max(5)
+  .name("Zoom")
+  .onChange(() => {
+    camera.updateProjectionMatrix()
+  })
 
 //Renderer properties
 const renderer = new THREE.WebGLRenderer({
@@ -69,11 +77,6 @@ renderer.shadowMap.enabled = true
 renderer.shadowMap.type = THREE.PCFSoftShadowMap
 renderer.physicallyCorrectLights = true
 
-
-gui.add(renderer, 'toneMappingExposure').min(0).max(10)
-  .step(0.0005)
-.name("Exposure")
-
 //OrbitControls
 const orbitControls = new OrbitControls(
   camera,
@@ -82,33 +85,13 @@ const orbitControls = new OrbitControls(
 orbitControls.enableDamping = true
 // orbitControls.target.set(-1.0434, 7.13516, 7.76293)
 orbitControls.target.set(0, 0, 0)
-orbitControls.minDistance = 3
+orbitControls.minDistance = 10
 orbitControls.maxDistance = 40
 orbitControls.maxPolarAngle = Math.PI * 0.40
 orbitControls.enablePan = false
 
 //outline effect
 let effectOutline = new OutlineEffect(renderer)
-
-//Debugging Tweaks
-gui
-  .add(orbitControls.target, "y")
-  .min(0)
-  .max(20)
-  .step(0.00001)
-  .name("Orbit Controls y")
-gui
-  .add(orbitControls.target, "x")
-  .min(-20)
-  .max(20)
-  .step(0.00001)
-  .name("Orbit Controls x")
-gui
-  .add(orbitControls.target, "z")
-  .min(-20)
-  .max(20)
-  .step(0.00001)
-  .name("Orbit Controls z")
 
 //Resize canvas
 const resize = () => {
@@ -146,10 +129,7 @@ light1.shadow.camera.near = 0.5 // default.shadow.camera.near = 0.5; // default
 // light1.shadow.normalBias = 0.5
 scene.add(light1)
 
-gui.add(light1.position, "x").min(-200).max(200).step(1)
-gui.add(light1.position, "y").min(-200).max(200).step(1)
-gui.add(light1.position, "z").min(-200).max(200).step(1)
-gui.add(light1, "intensity").min(0).max(7).step(0.0005)
+
 
 //Shadow Helper
 // const directionalLightHelper = new THREE.CameraHelper(
@@ -159,13 +139,6 @@ gui.add(light1, "intensity").min(0).max(7).step(0.0005)
 //Ambiental Light
 const ambientalLight = new THREE.AmbientLight(0xfff6dd, 6)
 scene.add(ambientalLight)
-gui
-  .add(ambientalLight, "intensity")
-  .min(0)
-  .max(10)
-  .step(0.0005)
-  .name("AL")
-
 
 //Add the plane for the plane for hide the camera
 const planeGeometryOverlay = new THREE.PlaneBufferGeometry(
@@ -257,6 +230,38 @@ const animate = () => {
 }
 animate()
 
+//Cube for debugging
+const cube = new THREE.Mesh(
+  new THREE.BoxBufferGeometry(0.5, 0.5, 0.5), 
+  new THREE.MeshBasicMaterial({ color: 0xff0000})
+)
+scene.add(cube)
+
+gui.add(cube.position, 'x')
+  .min(-50)
+  .max(50)
+  .step(0.0001)
+  .name("Target X")
+  .onChange(() => {
+    orbitControls.target.x = cube.position.x
+  })
+gui.add(cube.position, 'y')
+  .min(-20)
+  .max(20)
+  .step(0.0001)
+  .name("Target Y")
+  .onChange(() => {
+    orbitControls.target.y = cube.position.y
+  })
+gui.add(cube.position, 'z')
+  .min(-50)
+  .max(50)
+  .step(0.0001)
+  .name("Target z")
+  .onChange(() => {
+    orbitControls.target.z = cube.position.z
+  })
+
 
 const updateAllMaterialsToToonMaterials = () => {
   scene.traverse((child) => {
@@ -312,17 +317,6 @@ export const cleaupScene = () => {
 
 export const moveCameraInitScene = () => {
   timeline
-    // .to(
-    //   querySelector,
-    //   {
-    //     opacity: 0,
-    //     duration: 0.5,
-    //     onComplete: () => {
-    //       querySelector.style.display = "none"
-    //     },
-    //   },
-    //   "+=1.0"
-    // )
     .to(
       orbitControls.target,
       {
@@ -341,4 +335,25 @@ export const moveCameraInitScene = () => {
       },
       "-=1.5"
     )
+}
+
+export const animationToPlacePosition = (positions) => {
+  timeline.to(
+    camera.position, {
+      x: positions.camera.x, 
+      y: positions.camera.y, 
+      z: positions.camera.z
+    }, 
+  ).to(orbitControls.target, {
+    x: positions.target.x, 
+    y: positions.target.y, 
+    z: positions.target.z
+  }, '-=2.8'
+  
+  ).to(camera, {
+    zoom: positions.zoom, 
+    onUpdate: () => camera.updateProjectionMatrix()
+  }, '-=2.8'
+  )
+
 }
