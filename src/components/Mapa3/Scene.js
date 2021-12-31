@@ -234,7 +234,7 @@ const cube = new THREE.Mesh(
   new THREE.BoxBufferGeometry(0.5, 0.5, 0.5), 
   new THREE.MeshBasicMaterial({ color: 0xff0000})
 )
-scene.add(cube)
+// scene.add(cube)
 
 gui.add(cube.position, 'x')
   .min(-50)
