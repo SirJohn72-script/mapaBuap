@@ -18,8 +18,8 @@ let loadingBar = null
 let domElementPlacesBrowser = null
 
 //Debuging
-const gui = new dat.GUI({ width: 400 })
-gui.closed = true
+// const gui = new dat.GUI({ width: 400 })
+// gui.closed = true
 
 
 //timeline
@@ -39,32 +39,32 @@ const camera = new THREE.PerspectiveCamera(
 scene.add(camera)
 camera.position.set(-5.50889, 114.12489, 13.3497)
 
-gui
-  .add(camera.position, "x")
-  .min(-40)
-  .max(50)
-  .step(0.00001)
-  .name("Camera x")
-gui
-  .add(camera.position, "y")
-  .min(0)
-  .max(50)
-  .step(0.00001)
-  .name("Camera y")
-gui
-  .add(camera.position, "z")
-  .min(-40)
-  .max(50)
-  .step(0.00001)
-  .name("Camera z")
+// gui
+//   .add(camera.position, "x")
+//   .min(-40)
+//   .max(50)
+//   .step(0.00001)
+//   .name("Camera x")
+// gui
+//   .add(camera.position, "y")
+//   .min(0)
+//   .max(50)
+//   .step(0.00001)
+//   .name("Camera y")
+// gui
+//   .add(camera.position, "z")
+//   .min(-40)
+//   .max(50)
+//   .step(0.00001)
+//   .name("Camera z")
 
-gui.add(camera, 'zoom')
-  .min(1)
-  .max(5)
-  .name("Zoom")
-  .onChange(() => {
-    camera.updateProjectionMatrix()
-  })
+// gui.add(camera, 'zoom')
+//   .min(1)
+//   .max(5)
+//   .name("Zoom")
+//   .onChange(() => {
+//     camera.updateProjectionMatrix()
+//   })
 
 //Renderer properties
 const renderer = new THREE.WebGLRenderer({
@@ -230,36 +230,36 @@ const animate = () => {
 animate()
 
 //Cube for debugging
-const cube = new THREE.Mesh(
-  new THREE.BoxBufferGeometry(0.5, 0.5, 0.5), 
-  new THREE.MeshBasicMaterial({ color: 0xff0000})
-)
+// const cube = new THREE.Mesh(
+//   new THREE.BoxBufferGeometry(0.5, 0.5, 0.5), 
+//   new THREE.MeshBasicMaterial({ color: 0xff0000})
+// )
 // scene.add(cube)
 
-gui.add(cube.position, 'x')
-  .min(-50)
-  .max(50)
-  .step(0.0001)
-  .name("Target X")
-  .onChange(() => {
-    orbitControls.target.x = cube.position.x
-  })
-gui.add(cube.position, 'y')
-  .min(-20)
-  .max(20)
-  .step(0.0001)
-  .name("Target Y")
-  .onChange(() => {
-    orbitControls.target.y = cube.position.y
-  })
-gui.add(cube.position, 'z')
-  .min(-50)
-  .max(50)
-  .step(0.0001)
-  .name("Target z")
-  .onChange(() => {
-    orbitControls.target.z = cube.position.z
-  })
+// gui.add(cube.position, 'x')
+//   .min(-50)
+//   .max(50)
+//   .step(0.0001)
+//   .name("Target X")
+//   .onChange(() => {
+//     orbitControls.target.x = cube.position.x
+//   })
+// gui.add(cube.position, 'y')
+//   .min(-20)
+//   .max(20)
+//   .step(0.0001)
+//   .name("Target Y")
+//   .onChange(() => {
+//     orbitControls.target.y = cube.position.y
+//   })
+// gui.add(cube.position, 'z')
+//   .min(-50)
+//   .max(50)
+//   .step(0.0001)
+//   .name("Target z")
+//   .onChange(() => {
+//     orbitControls.target.z = cube.position.z
+//   })
 
 
 const updateAllMaterialsToToonMaterials = () => {
