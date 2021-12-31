@@ -4,6 +4,7 @@
   position: absolute;
   left: 0; 
   top: 0; 
+  border: 1px solid red; 
 }
 
 .loadingBar {
@@ -38,6 +39,7 @@
 
 .selectorPlaces{
   width: 80%; 
+  opacity: 0;
   padding: 0.5rem 1rem; 
   border: none;
   outline: none; 

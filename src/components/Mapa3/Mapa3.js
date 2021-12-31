@@ -636,18 +636,18 @@ const Mapa3 = () => {
   //Use effect for the 3D map
   useEffect(() => {
     initScene(mountRef)
-
     return () => {
       cleaupScene()
     }
   }, [])
 
+ 
   return (
     <>
       <div
         className="Mapa"
         ref={mountRef}
-      >
+      />
         {
         //Loading bar - dont touch
         }
@@ -656,8 +656,8 @@ const Mapa3 = () => {
         {
           //Places Selector
         }
-        <div className="selectorPosicion">
-          <select className='selectorPlaces'
+               <div className="selectorPosicion">
+            <select className='selectorPlaces'                 
             //Get the posicionts for the selected place
             onChange={(e) => {
               const positions = positionsPlaces.find(place => (
@@ -665,19 +665,19 @@ const Mapa3 = () => {
               ))
               animationToPlacePosition(positions.positions)
             }}
-            >
+          >
             {
               //Map the places for the map 
               positionsPlaces.map((item, index) => (
                 <option value={item.name}
-                  key ={index}>
+                  key={index}>
                   {item.name}
                 </option>
               ))
-             }
+            }
           </select>
         </div>
-      </div>
+        
     </>
   )
 }

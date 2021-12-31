@@ -14,6 +14,9 @@ import { Fragment } from "./Shaders/Fragment"
 let currentRef = null
 let loadingBar = null
 
+//Open places browser 
+let domElementPlacesBrowser = null
+
 //Debuging
 const gui = new dat.GUI({ width: 400 })
 gui.closed = true
@@ -95,16 +98,11 @@ let effectOutline = new OutlineEffect(renderer)
 
 //Resize canvas
 const resize = () => {
-  if (currentRef) {
-    renderer.setSize(
-      currentRef.clientWidth,
-      currentRef.clientHeight
-    )
-    camera.aspect =
-      currentRef.clientWidth / currentRef.clientHeight
-    camera.updateProjectionMatrix()
-  }
-}
+  renderer.setSize(currentRef.clientWidth, currentRef.clientHeight);
+  camera.aspect = currentRef.clientWidth / currentRef.clientHeight;
+  camera.updateProjectionMatrix();
+};
+
 window.addEventListener("resize", resize)
 
 //load the gradient map
@@ -173,10 +171,11 @@ const loaderManager = new THREE.LoadingManager(
           scene.remove(planeOverlay)
           planeOverlay.geometry.dispose()
           planeOverlay.material.dispose()
+          moveCameraInitScene()
+
         },
       })
- 
-      moveCameraInitScene()
+      console.log("Que pedo 1")
       renderer.shadowMap.autoUpdate = false
       renderer.shadowMap.needsUpdate = true
     })
@@ -296,16 +295,14 @@ const updateAllMaterialsToToonMaterials = () => {
 
 //Init the scene
 export const initScene = (mountRef) => {
+  //Querys for the loading bar and select browser
   loadingBar = document.querySelector(".loadingBar")
-  currentRef = mountRef.current
-  currentRef.appendChild(renderer.domElement)
-  renderer.setSize(
-    currentRef.clientWidth,
-    currentRef.clientHeight
-  )
-  camera.aspect =
-    currentRef.clientWidth / currentRef.clientHeight
-  camera.updateProjectionMatrix()
+  domElementPlacesBrowser = document.querySelector('.selectorPlaces')
+
+  //Data for the canvas 3D
+  currentRef = mountRef.current;
+  resize();
+  currentRef.appendChild(renderer.domElement);
 }
 
 //Clen the scene
@@ -316,6 +313,8 @@ export const cleaupScene = () => {
 }
 
 export const moveCameraInitScene = () => {
+  console.log(domElementPlacesBrowser.current)
+
   timeline
     .to(
       orbitControls.target,
@@ -334,7 +333,14 @@ export const moveCameraInitScene = () => {
         z: 20,
       },
       "-=1.5"
+  ).to(
+    domElementPlacesBrowser, {
+        opacity: 1, 
+        duration: 1.0, 
+      }
     )
+  
+ 
 }
 
 export const animationToPlacePosition = (positions) => {
@@ -356,4 +362,8 @@ export const animationToPlacePosition = (positions) => {
   }, '-=2.8'
   )
 
+}
+
+export const openPlacesBroser = () => {
+  return true
 }
