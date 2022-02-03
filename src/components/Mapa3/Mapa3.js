@@ -1,11 +1,19 @@
-import { initScene, cleaupScene, animationToPlacePosition } from "./Scene"
+import {
+  initScene,
+  cleaupScene,
+  animationToPlacePosition,
+  loadTextToTheModels,
+  loadGeneralMap,
+} from "./Scene"
 import { useEffect, useRef } from "react"
 import "./Styles.css"
 
-//Objets for positions 
+//Falta de la de cultura fisica
+
+//Objets for positions
 const positionsPlaces = [
   {
-    name: 'Vista General',
+    name: "Vista General",
     positions: {
       camera: {
         x: 20,
@@ -18,10 +26,12 @@ const positionsPlaces = [
         z: 0,
       },
       zoom: 1,
-    }
-  }, 
+    },
+  },
   {
-    name: 'Torre Rectoria',
+    name: "Torre Rectoria",
+    group: "TorreRectorioa",
+    text: "./texts/Torre.gltf",
     positions: {
       camera: {
         x: -3.78831,
@@ -31,13 +41,15 @@ const positionsPlaces = [
       target: {
         x: 0.5187,
         y: 4.4239,
-        z: 2.0807
+        z: 2.0807,
       },
       zoom: 1,
-    }
+    },
   },
   {
-    name: 'FACULTAD DE ADMINISTRACIÓN - ADM',
+    name: "FACULTAD DE ADMINISTRACIÓN - ADM",
+    group: "FacultadAdmon",
+    text: "./texts/facultadAdmon.gltf",
     positions: {
       camera: {
         x: 15.3473,
@@ -47,13 +59,15 @@ const positionsPlaces = [
       target: {
         x: 5.986,
         y: 1,
-        z: -9.8953
+        z: -9.8953,
       },
       zoom: 1,
-    }
+    },
   },
   {
-    name: 'FACULTAD DE ARQUITECTURA - ARQ',
+    name: "FACULTAD DE ARQUITECTURA - ARQ",
+    group: "FacultadArquitectura",
+    text: "./texts/facultadArquitectura.gltf",
     positions: {
       camera: {
         x: -10,
@@ -66,10 +80,12 @@ const positionsPlaces = [
         z: 0.779,
       },
       zoom: 1,
-    }
+    },
   },
   {
-    name: 'FACULTAD DE CIENCIAS BIOLÓGICAS - BIO',
+    name: "FACULTAD DE CIENCIAS BIOLÓGICAS - BIO",
+    group: "FacultadCienciasBilogicas",
+    text: "./texts/facultadCienciasBiologicas.gltf",
     positions: {
       camera: {
         x: 7.855,
@@ -82,10 +98,12 @@ const positionsPlaces = [
         z: 0,
       },
       zoom: 1,
-    }
+    },
   },
   {
-    name: 'FACULTAD DE CIENCIAS DE LA COMPUTACIÓN - CCO',
+    name: "FACULTAD DE CIENCIAS DE LA COMPUTACIÓN - CCO",
+    group: "FacultadCienciasComputacion",
+    text: "./texts/facultadCienciasComputacion.gltf",
     positions: {
       camera: {
         x: -29.71394,
@@ -98,10 +116,12 @@ const positionsPlaces = [
         z: -13.51,
       },
       zoom: 2,
-    }
+    },
   },
   {
-    name: 'FACULTAD DE CIENCIAS DE LA ELECTRÓNICA - FCE',
+    name: "FACULTAD DE CIENCIAS DE LA ELECTRÓNICA - FCE",
+    group: "FacultadElectronica",
+    text: "./texts/facultadElectronica.gltf",
     positions: {
       camera: {
         x: -19.766,
@@ -114,10 +134,12 @@ const positionsPlaces = [
         z: -6.4884,
       },
       zoom: 1.7,
-    }
+    },
   },
-    {
-    name: 'FACULTAD DE CIENCIAS FÍSICO-MATEMÁTICAS - FM',
+  {
+    name: "FACULTAD DE CIENCIAS FÍSICO-MATEMÁTICAS - FM",
+    group: "CienciasFisicoMatematico",
+    text: "./texts/cienciasFisicoMatematico.gltf",
     positions: {
       camera: {
         x: -9.22,
@@ -130,10 +152,12 @@ const positionsPlaces = [
         z: -11.5651,
       },
       zoom: 2,
-    }
+    },
   },
   {
-    name: 'FACULTAD DE CONTADURÍA PÚBLICA - FCP',
+    name: "FACULTAD DE CONTADURÍA PÚBLICA - FCP",
+    group: "FacultadContaduria",
+    text: "./texts/facultadContaduria.gltf",
     positions: {
       camera: {
         x: -19.02,
@@ -146,10 +170,12 @@ const positionsPlaces = [
         z: 26.0836,
       },
       zoom: 2,
-    }
+    },
   },
-    {
-    name: 'FACULTAD DE CIENCIAS QUÍMICAS - FCQ - I',
+  {
+    name: "FACULTAD DE CIENCIAS QUÍMICAS - FCQ - I",
+    group: "FacultadCienciasQuimicasI",
+    text: "./texts/facultadCienciasQuimicasI.gltf",
     positions: {
       camera: {
         x: -19.02,
@@ -162,10 +188,12 @@ const positionsPlaces = [
         z: -12.5781,
       },
       zoom: 1,
-    }
+    },
   },
-    {
-    name: 'FACULTAD DE CIENCIAS QUÍMICAS - FCQ - II',
+  {
+    name: "FACULTAD DE CIENCIAS QUÍMICAS - FCQ - II",
+    group: "FacultadCienciasQuimicasII",
+    text: "./texts/facultadCienciasQuimicasII.gltf",
     positions: {
       camera: {
         x: -0.8614,
@@ -178,10 +206,12 @@ const positionsPlaces = [
         z: -4.9629,
       },
       zoom: 1,
-    }
+    },
   },
   {
-    name: 'FACULTAD DE CIENCIAS QUÍMICAS - FCQ - III',
+    name: "FACULTAD DE CIENCIAS QUÍMICAS - FCQ - III",
+    group: "FacultadCienciasQuimicasIII",
+    text: "./texts/facultadCienciasQuimicasIII.gltf",
     positions: {
       camera: {
         x: 23.155,
@@ -194,10 +224,12 @@ const positionsPlaces = [
         z: 34.2846,
       },
       zoom: 3,
-    }
+    },
   },
   {
-    name: 'FACULTAD DE DERECHO Y CIENCIAS SOCIALES - DER',
+    name: "FACULTAD DE DERECHO Y CIENCIAS SOCIALES - DER",
+    group: "FacultadDerechoCienciasSociales",
+    text: "./texts/facultadDerechoCienciasSociales.gltf",
     positions: {
       camera: {
         x: 23.155,
@@ -210,10 +242,12 @@ const positionsPlaces = [
         z: -11.4065,
       },
       zoom: 3,
-    }
+    },
   },
   {
-    name: 'FACULTAD DE ECONOMÍA - ECO',
+    name: "FACULTAD DE ECONOMÍA - ECO",
+    group: "FacultadEconomia",
+    text: "./texts/facultadEconomia.gltf",
     positions: {
       camera: {
         x: 17.29,
@@ -226,10 +260,12 @@ const positionsPlaces = [
         z: -11.4065,
       },
       zoom: 2,
-    }
+    },
   },
   {
-    name: 'FACULTAD DE FILOSOFÍA Y ANTROPOLOGÍA - FIL',
+    name: "FACULTAD DE FILOSOFÍA Y ANTROPOLOGÍA - FIL",
+    group: "FacultadFilosofiaAntropologia",
+    text: "./texts/facultadFilosofiaAntropologia.gltf",
     positions: {
       camera: {
         x: 35.456,
@@ -242,10 +278,12 @@ const positionsPlaces = [
         z: 5.5,
       },
       zoom: 2.5,
-    }
+    },
   },
   {
-    name: 'FACULTAD DE INGENIERÍA - ING',
+    name: "FACULTAD DE INGENIERÍA - ING",
+    group: "FacultadIngenieria",
+    text: "./texts/facultadIngenieria.gltf",
     positions: {
       camera: {
         x: 0.309,
@@ -258,10 +296,12 @@ const positionsPlaces = [
         z: 1.48,
       },
       zoom: 2.5,
-    }
+    },
   },
-   {
-    name: 'FACULTAD DE INGENIERÍA QUÍMICA - FIQ',
+  {
+    name: "FACULTAD DE INGENIERÍA QUÍMICA - FIQ",
+    group: "FacultadIngenieriaQuimica",
+    text: "./texts/facultadIngenieriaQuimica.gltf",
     positions: {
       camera: {
         x: -19.02,
@@ -274,10 +314,12 @@ const positionsPlaces = [
         z: -12.5781,
       },
       zoom: 1,
-    }
+    },
   },
   {
     name: 'FACULTAD DE MEDICINA VETERINARIA Y ZOOTECNIA "HOSPITAL VETERINARIO, PUEBLA" - MVZ',
+    group: "MVZ",
+    text: "./texts/mvz.gltf",
     positions: {
       camera: {
         x: -9.64,
@@ -290,10 +332,12 @@ const positionsPlaces = [
         z: 29.5983,
       },
       zoom: 2.5,
-    }
+    },
   },
   {
-    name: 'EDIFICIO MULTIAULAS - EMAI',
+    name: "EDIFICIO MULTIAULAS - EMAI",
+    group: "EMA1",
+    text: "./texts/EMA1.gltf",
     positions: {
       camera: {
         x: -2.65,
@@ -306,10 +350,12 @@ const positionsPlaces = [
         z: -4.96,
       },
       zoom: 2.5,
-    }
+    },
   },
   {
-    name: 'EDIFICIO MULTIAULAS - EMAII',
+    name: "EDIFICIO MULTIAULAS - EMAII",
+    group: "EMA2",
+    text: "./texts/EMA2.gltf",
     positions: {
       camera: {
         x: -2.65,
@@ -322,10 +368,12 @@ const positionsPlaces = [
         z: -0.8624,
       },
       zoom: 2.5,
-    }
+    },
   },
   {
-    name: 'EDIFICIO MULTIAULAS - EMAIII',
+    name: "EDIFICIO MULTIAULAS - EMAIII",
+    group: "EMA3",
+    text: "./texts/EMA3.gltf",
     positions: {
       camera: {
         x: -21.95,
@@ -338,26 +386,12 @@ const positionsPlaces = [
         z: -10.2349,
       },
       zoom: 2.5,
-    }
+    },
   },
   {
-    name: 'EDIFICIO MULTIAULAS - EMAIII',
-    positions: {
-      camera: {
-        x: -21.95,
-        y: 1,
-        z: 2.65,
-      },
-      target: {
-        x: -7.8918,
-        y: 1,
-        z: -10.2349,
-      },
-      zoom: 2.5,
-    }
-  },
-  {
-    name: 'EDIFICIO MULTIAULAS - EMAIV',
+    name: "EDIFICIO MULTIAULAS - EMAIV",
+    group: "EMA4",
+    text: "./texts/EMA4.gltf",
     positions: {
       camera: {
         x: 15.539,
@@ -370,10 +404,12 @@ const positionsPlaces = [
         z: 29.0125,
       },
       zoom: 2.5,
-    }
+    },
   },
   {
-    name: 'EDIFICIO MULTIAULAS - EMAV',
+    name: "EDIFICIO MULTIAULAS - EMAV",
+    group: "EMA5",
+    text: "./texts/EMA5.gltf",
     positions: {
       camera: {
         x: 15.539,
@@ -386,10 +422,12 @@ const positionsPlaces = [
         z: 30.7699,
       },
       zoom: 2.5,
-    }
+    },
   },
   {
-    name: 'EDIFICIO MULTIAULAS - EMAVI',
+    name: "EDIFICIO MULTIAULAS - EMAVI",
+    group: "EMA6",
+    text: "./texts/EMA6.gltf",
     positions: {
       camera: {
         x: 15.539,
@@ -402,10 +440,12 @@ const positionsPlaces = [
         z: 26.6694,
       },
       zoom: 2.5,
-    }
+    },
   },
   {
-    name: 'EDIFICIO MULTIAULAS - EMAVII',
+    name: "EDIFICIO MULTIAULAS - EMAVII",
+    group: "EMA7",
+    text: "./texts/EMA7.gltf",
     positions: {
       camera: {
         x: 36.0419,
@@ -418,10 +458,12 @@ const positionsPlaces = [
         z: 33.5362,
       },
       zoom: 2.5,
-    }
+    },
   },
   {
-    name: 'EDIFICIO MULTIAULAS - EMAVIII',
+    name: "EDIFICIO MULTIAULAS - EMAVIII",
+    group: "EMA8",
+    text: "./texts/EMA8.gltf",
     positions: {
       camera: {
         x: -2.61975,
@@ -429,15 +471,17 @@ const positionsPlaces = [
         z: -33.666,
       },
       target: {
-        x: 7.30,
+        x: 7.3,
         y: 1.5,
         z: -14.92,
       },
       zoom: 2.5,
-    }
+    },
   },
   {
-    name: 'FACULTAD DE LENGUAS - LEN',
+    name: "FACULTAD DE LENGUAS - LEN",
+    group: "FacultadLenguas",
+    text: "./texts/FacultadLenguas.gltf",
     positions: {
       camera: {
         x: 14.36794,
@@ -450,10 +494,12 @@ const positionsPlaces = [
         z: -14.3354,
       },
       zoom: 2.5,
-    }
+    },
   },
   {
-    name: 'INSTITUTO DE FISIOLOGÍA - IFI',
+    name: "INSTITUTO DE FISIOLOGÍA - IFI",
+    group: "InstitutoFisiologia",
+    text: "./texts/InstitutoFisiologia.gltf",
     positions: {
       camera: {
         x: -4.64,
@@ -466,10 +512,12 @@ const positionsPlaces = [
         z: -16.0927,
       },
       zoom: 2.5,
-    }
+    },
   },
   {
-    name: 'IFUAP / INSTITUTO DE FÍSICA - IF',
+    name: "IFUAP / INSTITUTO DE FÍSICA - IF",
+    group: "InstitutoFisica",
+    text: "./texts/InstitutoFisica.gltf",
     positions: {
       camera: {
         x: -4.64,
@@ -482,10 +530,12 @@ const positionsPlaces = [
         z: -13.1638,
       },
       zoom: 2.5,
-    }
+    },
   },
   {
-    name: 'ICUAP / INSTITUTO DE CIENCIAS - IC - I',
+    name: "ICUAP / INSTITUTO DE CIENCIAS - IC - I",
+    group: "InstitutoCiencias1",
+    text: "./texts/InstitutoCiencias1.gltf",
     positions: {
       camera: {
         x: -28.39,
@@ -498,10 +548,12 @@ const positionsPlaces = [
         z: -18.2294,
       },
       zoom: 2.5,
-    }
+    },
   },
   {
-    name: 'ICUAP / INSTITUTO DE CIENCIAS - IC - II',
+    name: "ICUAP / INSTITUTO DE CIENCIAS - IC - 1 - 3 - 4",
+    group: "InstitutoCiencias1_3_4",
+    text: "./texts/InstitutoCiencias134.gltf",
     positions: {
       camera: {
         x: -28.39,
@@ -514,10 +566,12 @@ const positionsPlaces = [
         z: -16.27,
       },
       zoom: 2.5,
-    }
+    },
   },
   {
-    name: 'ICUAP / INSTITUTO DE CIENCIAS - IC - III',
+    name: "ICUAP / INSTITUTO DE CIENCIAS - IC - 5 - 6",
+    group: "InstitutoCiencias5_6",
+    text: "./texts/InstitutoCiencias56.gltf",
     positions: {
       camera: {
         x: -35.42,
@@ -530,10 +584,12 @@ const positionsPlaces = [
         z: -11.45,
       },
       zoom: 2.5,
-    }
+    },
   },
   {
-    name: 'ICUAP / INSTITUTO DE CIENCIAS - IC - IV',
+    name: "ICUAP / INSTITUTO DE CIENCIAS - IC - 7 - 8 - 9 - 10 - 11",
+    group: "InstitutoCiencias7_8_9_10_11",
+    text: "./texts/InstitutoCiencias7_8_9_10_11.gltf",
     positions: {
       camera: {
         x: 17.456,
@@ -546,10 +602,12 @@ const positionsPlaces = [
         z: -1.9577,
       },
       zoom: 2.5,
-    }
+    },
   },
   {
-    name: 'ICUAP / INSTITUTO DE CIENCIAS - IC - V',
+    name: "ICUAP / INSTITUTO DE CIENCIAS - IC - 11",
+    group: "InstitutoCiencias11",
+    text: "./texts/InstitutoCiencias11.gltf",
     positions: {
       camera: {
         x: 50,
@@ -562,10 +620,12 @@ const positionsPlaces = [
         z: -14.3242,
       },
       zoom: 2.5,
-    }
+    },
   },
   {
-    name: 'ICUAP / INSTITUTO DE CIENCIAS - IC - VI',
+    name: "ICUAP / INSTITUTO DE CIENCIAS - IC - 12",
+    group: "InstitutoCiencias12",
+    text: "./texts/InstitutoCiencias12.gltf",
     positions: {
       camera: {
         x: 24.91203,
@@ -578,10 +638,12 @@ const positionsPlaces = [
         z: 31.8875,
       },
       zoom: 2.5,
-    }
+    },
   },
   {
-    name: 'ARENA BUAP',
+    name: "ARENA BUAP",
+    group: "Arena",
+    text: "./texts/Arena.gltf",
     positions: {
       camera: {
         x: 24.91203,
@@ -594,10 +656,12 @@ const positionsPlaces = [
         z: 14.314,
       },
       zoom: 2.5,
-    }
+    },
   },
   {
-    name: 'ESTADIO',
+    name: "ESTADIO",
+    group: "Estadio",
+    text: "./texts/Estadio.gltf",
     positions: {
       camera: {
         x: 24.32,
@@ -610,10 +674,12 @@ const positionsPlaces = [
         z: 15.615,
       },
       zoom: 2,
-    }
+    },
   },
   {
-    name: 'BIBLIOTECA CENTRAL',
+    name: "BIBLIOTECA CENTRAL",
+    group: "BibliotecaCentral",
+    text: "./texts/BibliotecaCentral.gltf",
     positions: {
       camera: {
         x: 24.32,
@@ -626,7 +692,7 @@ const positionsPlaces = [
         z: 36.4436,
       },
       zoom: 1.5,
-    }
+    },
   },
 ]
 
@@ -636,48 +702,56 @@ const Mapa3 = () => {
   //Use effect for the 3D map
   useEffect(() => {
     initScene(mountRef)
+    //load the general map
+    loadGeneralMap("./mapa/Mapa.gltf")
+
+    //Load the models, text, and info for animations
+    positionsPlaces.map((modelInfo) =>
+      modelInfo.text
+        ? loadTextToTheModels(
+            modelInfo.group,
+            modelInfo.text
+          )
+        : null
+    )
     return () => {
       cleaupScene()
     }
   }, [])
 
- 
   return (
     <>
-      <div
-        className="Mapa"
-        ref={mountRef}
-      />
-        {
+      <div className="Mapa" ref={mountRef} />
+      {
         //Loading bar - dont touch
-        }
-        <div className="loadingBar"></div>
+      }
+      <div className="loadingBar"></div>
 
-        {
-          //Places Selector
-        }
-               <div className="selectorPosicion">
-            <select className='selectorPlaces'                 
-            //Get the posicionts for the selected place
-            onChange={(e) => {
-              const positions = positionsPlaces.find(place => (
-                e.target.value === place.name
-              ))
-              animationToPlacePosition(positions.positions)
-            }}
-          >
-            {
-              //Map the places for the map 
-              positionsPlaces.map((item, index) => (
-                <option value={item.name}
-                  key={index}>
-                  {item.name}
-                </option>
-              ))
-            }
-          </select>
-        </div>
-        
+      {
+        //Places Selector
+      }
+      <div className="selectorPosicion">
+        <select
+          className="selectorPlaces"
+          //Get the posicionts for the selected place
+          onChange={(e) => {
+            const { positions, group } =
+              positionsPlaces.find(
+                (place) => e.target.value === place.name
+              )
+            animationToPlacePosition(positions, group)
+          }}
+        >
+          {
+            //Map the places for the map
+            positionsPlaces.map((item, index) => (
+              <option value={item.name} key={index}>
+                {item.name}
+              </option>
+            ))
+          }
+        </select>
+      </div>
     </>
   )
 }

@@ -14,13 +14,15 @@ import { Fragment } from "./Shaders/Fragment"
 let currentRef = null
 let loadingBar = null
 
-//Open places browser 
+//Open the lists that contains the colleges faculty
 let domElementPlacesBrowser = null
+
+//Contains the text meshes for the colleges faculty
+const Facultades3D = {}
 
 //Debuging
 // const gui = new dat.GUI({ width: 400 })
 // gui.closed = true
-
 
 //timeline
 const timeline = gsap.timeline({
@@ -38,33 +40,6 @@ const camera = new THREE.PerspectiveCamera(
 )
 scene.add(camera)
 camera.position.set(-5.50889, 114.12489, 13.3497)
-
-// gui
-//   .add(camera.position, "x")
-//   .min(-40)
-//   .max(50)
-//   .step(0.00001)
-//   .name("Camera x")
-// gui
-//   .add(camera.position, "y")
-//   .min(0)
-//   .max(50)
-//   .step(0.00001)
-//   .name("Camera y")
-// gui
-//   .add(camera.position, "z")
-//   .min(-40)
-//   .max(50)
-//   .step(0.00001)
-//   .name("Camera z")
-
-// gui.add(camera, 'zoom')
-//   .min(1)
-//   .max(5)
-//   .name("Zoom")
-//   .onChange(() => {
-//     camera.updateProjectionMatrix()
-//   })
 
 //Renderer properties
 const renderer = new THREE.WebGLRenderer({
@@ -90,7 +65,7 @@ orbitControls.enableDamping = true
 orbitControls.target.set(0, 0, 0)
 orbitControls.minDistance = 10
 orbitControls.maxDistance = 40
-orbitControls.maxPolarAngle = Math.PI * 0.40
+orbitControls.maxPolarAngle = Math.PI * 0.4
 orbitControls.enablePan = false
 
 //outline effect
@@ -98,10 +73,14 @@ let effectOutline = new OutlineEffect(renderer)
 
 //Resize canvas
 const resize = () => {
-  renderer.setSize(currentRef.clientWidth, currentRef.clientHeight);
-  camera.aspect = currentRef.clientWidth / currentRef.clientHeight;
-  camera.updateProjectionMatrix();
-};
+  renderer.setSize(
+    currentRef.clientWidth,
+    currentRef.clientHeight
+  )
+  camera.aspect =
+    currentRef.clientWidth / currentRef.clientHeight
+  camera.updateProjectionMatrix()
+}
 
 window.addEventListener("resize", resize)
 
@@ -126,13 +105,6 @@ light1.shadow.mapSize.set(1024, 1024)
 light1.shadow.camera.near = 0.5 // default.shadow.camera.near = 0.5; // default
 // light1.shadow.normalBias = 0.5
 scene.add(light1)
-
-
-
-//Shadow Helper
-// const directionalLightHelper = new THREE.CameraHelper(
-//   light1.shadow.camera
-// )
 
 //Ambiental Light
 const ambientalLight = new THREE.AmbientLight(0xfff6dd, 6)
@@ -172,10 +144,8 @@ const loaderManager = new THREE.LoadingManager(
           planeOverlay.geometry.dispose()
           planeOverlay.material.dispose()
           moveCameraInitScene()
-
         },
       })
-      console.log("Que pedo 1")
       renderer.shadowMap.autoUpdate = false
       renderer.shadowMap.needsUpdate = true
     })
@@ -184,13 +154,8 @@ const loaderManager = new THREE.LoadingManager(
     const progessRatio = itemsLoaded / itemsTotal
     loadingBar.style.transform = `scaleX(${progessRatio})`
   },
-  () => {
-    console.log("Error")
-  }
+  () => {}
 )
-
-//Primer grupo
-const grupoMapa1 = new THREE.Group()
 
 //Load the model
 const gltfloader = new GLTFLoader(loaderManager)
@@ -200,24 +165,12 @@ const dracoLoader = new DRACOLoader()
 dracoLoader.setDecoderPath("/draco/")
 gltfloader.setDRACOLoader(dracoLoader)
 
-gltfloader.load("./mapa/MapaD.gltf", (gltf) => {
-  while (gltf.scene.children.length) {
-    gltf.scene.children[0].castShadow = true
-    gltf.scene.children[0].receiveShadow = true
-    grupoMapa1.add(gltf.scene.children[0])
-  }
-  scene.add(grupoMapa1)
-  updateAllMaterialsToToonMaterials()
-})
-
-
 //Material for the meshes
 const materialToon = new THREE.MeshToonMaterial({
   gradientMap: gradientMap,
   color: 0xeeeeee,
-  transparent: true, 
+  transparent: true,
   displacementScale: 0.3,
-  
 })
 
 //Animate the scene
@@ -229,54 +182,24 @@ const animate = () => {
 }
 animate()
 
-//Cube for debugging
-// const cube = new THREE.Mesh(
-//   new THREE.BoxBufferGeometry(0.5, 0.5, 0.5), 
-//   new THREE.MeshBasicMaterial({ color: 0xff0000})
-// )
-// scene.add(cube)
-
-// gui.add(cube.position, 'x')
-//   .min(-50)
-//   .max(50)
-//   .step(0.0001)
-//   .name("Target X")
-//   .onChange(() => {
-//     orbitControls.target.x = cube.position.x
-//   })
-// gui.add(cube.position, 'y')
-//   .min(-20)
-//   .max(20)
-//   .step(0.0001)
-//   .name("Target Y")
-//   .onChange(() => {
-//     orbitControls.target.y = cube.position.y
-//   })
-// gui.add(cube.position, 'z')
-//   .min(-50)
-//   .max(50)
-//   .step(0.0001)
-//   .name("Target z")
-//   .onChange(() => {
-//     orbitControls.target.z = cube.position.z
-//   })
-
-
 const updateAllMaterialsToToonMaterials = () => {
   scene.traverse((child) => {
-    if (child instanceof THREE.Mesh && child.name !== 'PlaneOverlay') {
-      let map = null; 
-      let alpha = null; 
-      let ao = null 
-      let displacement = null; 
-      let normal = null;
+    if (
+      child instanceof THREE.Mesh &&
+      child.name !== "PlaneOverlay"
+    ) {
+      let map = null
+      let alpha = null
+      let ao = null
+      let displacement = null
+      let normal = null
 
       if (child.material.map !== null) {
         map = child.material.map
         alpha = child.material.alphaMap
-        ao = child.material.aoMap; 
-        displacement = child.material.displacementMap; 
-        normal = child.material.normalMap; 
+        ao = child.material.aoMap
+        displacement = child.material.displacementMap
+        normal = child.material.normalMap
       }
       child.castShadow = true
       child.receiveShadow = true
@@ -284,10 +207,10 @@ const updateAllMaterialsToToonMaterials = () => {
       child.material = materialToon.clone()
       child.material.color.set(color)
       child.material.map = map
-      child.material.alphaMap = alpha; 
+      child.material.alphaMap = alpha
       child.material.normalMap = normal
-      child.material.aoMap = ao; 
-      child.material.displacementMap = displacement; 
+      child.material.aoMap = ao
+      child.material.displacementMap = displacement
       child.material.needsUpdate = true
     }
   })
@@ -297,12 +220,14 @@ const updateAllMaterialsToToonMaterials = () => {
 export const initScene = (mountRef) => {
   //Querys for the loading bar and select browser
   loadingBar = document.querySelector(".loadingBar")
-  domElementPlacesBrowser = document.querySelector('.selectorPlaces')
+  domElementPlacesBrowser = document.querySelector(
+    ".selectorPlaces"
+  )
 
   //Data for the canvas 3D
-  currentRef = mountRef.current;
-  resize();
-  currentRef.appendChild(renderer.domElement);
+  currentRef = mountRef.current
+  resize()
+  currentRef.appendChild(renderer.domElement)
 }
 
 //Clen the scene
@@ -312,9 +237,30 @@ export const cleaupScene = () => {
   window.removeEventListener("resize", resize)
 }
 
-export const moveCameraInitScene = () => {
-  console.log(domElementPlacesBrowser.current)
+//Load the text meshes for the the college faculties
+export const loadTextToTheModels = (group, textRute) => {
+  //Create the group for the text for the model
+  Facultades3D[group] = { text: new THREE.Group() }
 
+  gltfloader.load(textRute, (gltf) => {
+    //If the group exists
+    while (gltf.scene.children.length) {
+      Facultades3D[group].text.add(gltf.scene.children[0])
+    }
+    Facultades3D[group].text.position.y = -10
+    scene.add(Facultades3D[group].text)
+  })
+}
+
+//Load the general map
+export const loadGeneralMap = (modelRute) => {
+  gltfloader.load(modelRute, (gltf) => {
+    scene.add(gltf.scene)
+  })
+}
+
+//Animations
+export const moveCameraInitScene = () => {
   timeline
     .to(
       orbitControls.target,
@@ -333,35 +279,87 @@ export const moveCameraInitScene = () => {
         z: 20,
       },
       "-=1.5"
-  ).to(
-    domElementPlacesBrowser, {
-        opacity: 1, 
-        duration: 1.0, 
-      }
     )
-  
- 
+    .to(domElementPlacesBrowser, {
+      opacity: 1,
+      duration: 1.0,
+    })
 }
 
-export const animationToPlacePosition = (positions) => {
-  timeline.to(
-    camera.position, {
-      x: positions.camera.x, 
-      y: positions.camera.y, 
-      z: positions.camera.z
-    }, 
-  ).to(orbitControls.target, {
-    x: positions.target.x, 
-    y: positions.target.y, 
-    z: positions.target.z
-  }, '-=2.8'
-  
-  ).to(camera, {
-    zoom: positions.zoom, 
-    onUpdate: () => camera.updateProjectionMatrix()
-  }, '-=2.8'
-  )
+export const animationToPlacePosition = (
+  positions,
+  grupo
+) => {
+  //Animations when the group is passed,
+  //The general view doest have gruop or text
+  resetTextAnimation()
+  if (grupo) {
+    timeline
+      .to(camera.position, {
+        x: positions.camera.x,
+        y: positions.camera.y,
+        z: positions.camera.z,
+      })
+      .to(
+        orbitControls.target,
+        {
+          x: positions.target.x,
+          y: positions.target.y,
+          z: positions.target.z,
+        },
+        "-=2.8"
+      )
+      .to(
+        camera,
+        {
+          zoom: positions.zoom,
+          onUpdate: () => camera.updateProjectionMatrix(),
+        },
+        "-=2.8"
+      )
+      .to(
+        Facultades3D[grupo].text.position,
+        {
+          y: 0,
+          duration: 1.2,
+          overwrite: true,
+        },
+        "-=0.8"
+      )
+  }
+  //Animation for the general view
+  else {
+    timeline
+      .to(camera.position, {
+        x: positions.camera.x,
+        y: positions.camera.y,
+        z: positions.camera.z,
+      })
+      .to(
+        orbitControls.target,
+        {
+          x: positions.target.x,
+          y: positions.target.y,
+          z: positions.target.z,
+        },
+        "-=2.8"
+      )
+      .to(
+        camera,
+        {
+          zoom: positions.zoom,
+          onUpdate: () => camera.updateProjectionMatrix(),
+        },
+        "-=2.8"
+      )
+  }
+}
 
+//Move back the text to the undergroung
+export const resetTextAnimation = () => {
+  Object.keys(Facultades3D).forEach(function (key, index) {
+    Facultades3D[key].text.position.y = -10
+  })
 }
 
 export const openPlacesBroser = () => {
