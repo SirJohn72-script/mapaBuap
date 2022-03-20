@@ -1,6 +1,5 @@
-# Plantilla para usar Three.js con React 
-Sientete libre de usar esta plantilla c: 
+# Mapa BUAP 3D (No Oficial)
+![Buap Mapa Cover](public/coverMapa.PNG)
+Recreación del Benemérita Universidad Autónoma de Puebla 
 
-## Instalacion 
-No te olvides de ejecutar el comando $ npm install , una vez hayas descargado el proyecto c: 
-
+PD: Posible incompatibilidad con dispositivos de Apple
