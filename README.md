@@ -3,3 +3,6 @@
 Recreación del Benemérita Universidad Autónoma de Puebla 
 
 PD: Posible incompatibilidad con dispositivos de Apple
+
+# Demo
+- Firebase Hosting https://mapabuap-3d-app.web.app/
